@@ -6,7 +6,7 @@
 </head>
 <body>
 <form action="#"
-      th:action="@{/create}"
+      th:action="@{/admin/create}"
       th:object="${user}" method="post">
     <label for="name">Name</label>
     <input type="text" th:field="*{name}" id="name" placeholder="Name">
@@ -26,5 +26,7 @@
     <br>
     <input type="submit" value="Create User">
 </form>
+<br>
+<div th:replace="logout :: logout"></div>
 </body>
 </html>
