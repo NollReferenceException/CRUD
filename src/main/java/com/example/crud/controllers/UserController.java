@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -20,11 +21,6 @@ public class UserController {
 
     @Autowired
     private UserServiceImpl userService;
-
-    @GetMapping("/admin/signup")
-    public String showSignUpForm(User user) {
-        return "create-user";
-    }
 
     @GetMapping("/user")
     public String showUser(Model model) {
@@ -40,21 +36,6 @@ public class UserController {
         return "adminPanel";
     }
 
-    @GetMapping("/registration")
-    public String showRegistrationForm(@ModelAttribute("user") User user) {
-        return "registration";
-    }
-
-    @PostMapping("/registration")
-    public String registerUser(@ModelAttribute("user") User user, BindingResult result) {
-        if (result.hasErrors()) {
-            return "/registration";
-        }
-
-        userService.save(user);
-        return "redirect:/login";
-    }
-
     @PostMapping("/admin/create")
     public String addUser(@ModelAttribute("user") User user, BindingResult result) {
         if (result.hasErrors()) {
@@ -63,6 +44,11 @@ public class UserController {
 
         userService.save(user);
         return "redirect:/adminPanel";
+    }
+
+    @GetMapping("/admin/signup")
+    public String showSignUpForm() {
+        return "create-user";
     }
 
     @GetMapping("/admin/edit/{id}")

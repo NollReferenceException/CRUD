@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
@@ -16,6 +18,7 @@ public class User implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotEmpty
     @Column
     private String name;
 
@@ -25,9 +28,11 @@ public class User implements Serializable, UserDetails {
     @Column
     private String email;
 
+    @Min(value = 0)
     @Column
     private Byte age;
 
+    @NotEmpty
     @Column
     private String password;
 

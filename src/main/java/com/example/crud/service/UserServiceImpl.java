@@ -31,6 +31,10 @@ public class UserServiceImpl implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     public void save(User user) {
+        if (userDao.findByName(user.getName()).isPresent()) {
+            throw new RuntimeException(user.getName() + " пользователь уже существует");
+        }
+
         user.setRoles(Set.of(roleService.findByName("ROLE_USER")));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.save(user);
