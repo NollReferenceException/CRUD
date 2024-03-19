@@ -27,8 +27,12 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private RoleServiceImpl roleService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public void save(User user) {
         user.setRoles(Set.of(roleService.findByName("ROLE_USER")));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.save(user);
     }
 
