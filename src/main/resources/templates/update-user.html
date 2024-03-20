@@ -25,6 +25,14 @@
     <input type="number" th:field="*{age}" id="age" placeholder="Age">
     <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
     <br>
+    <th:block th:each="role:${user.allRoles}">
+        <input type="checkbox"
+               name="roles"            
+               th:field="*{roles}"
+               th:value="${role.id}"
+               th:text="${role.role}" class="m-2"/>
+    </th:block>
+    <br>
     <input type="submit" value="Update User">
 </form>
 <br>

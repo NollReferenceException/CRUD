@@ -39,6 +39,9 @@ public class User implements Serializable, UserDetails {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @Transient
+    private Set<Role> allRoles;
+
     @SuppressWarnings("UnusedDeclaration")
     public User() {
     }
@@ -145,5 +148,13 @@ public class User implements Serializable, UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<Role> getAllRoles() {
+        return allRoles;
+    }
+
+    public void setAllRoles(Set<Role> allRoles) {
+        this.allRoles = allRoles;
     }
 }

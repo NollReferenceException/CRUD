@@ -12,6 +12,7 @@
                 <th>Age</th>
                 <th>Edit</th>
                 <th>Delete</th>
+                <th>Roles</th>
             </tr>
             </thead>
             <tbody>
@@ -22,6 +23,11 @@
                 <td th:text="${user.age}"></td>
                 <td><a th:href="@{/admin/edit/{id}(id=${user.id})}">Edit</a></td>
                 <td><a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a></td>
+                <td th:block th:each="role:${user.roles}" >
+                    <th:text type="text"
+                             name="roles"
+                             th:text="${role.role}" class="m-2"/>
+                    </th:block></td>
             </tr>
             </tbody>
         </table>

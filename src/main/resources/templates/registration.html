@@ -25,6 +25,12 @@
            th:text="${error}">Validation error</p>
     </div>
     <div>
+        <label th:text="age">age</label>
+        <input type="number" th:field="*{age}"/>
+        <p th:each="error : ${#fields.errors('age')}"
+           th:text="${error}">Validation error</p>
+    </div>
+    <div>
         <label th:text="password">password</label>
         <input type="password" th:field="*{password}"/>
         <p th:each="error : ${#fields.errors('password')}"

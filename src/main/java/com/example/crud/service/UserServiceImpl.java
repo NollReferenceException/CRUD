@@ -40,6 +40,10 @@ public class UserServiceImpl implements UserDetailsService {
         userDao.save(user);
     }
 
+    public void update(User user) {
+        userDao.save(user);
+    }
+
     public Iterable<User> findAll() {
         return userDao.findAll();
     }

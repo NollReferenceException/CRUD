@@ -2,10 +2,13 @@ package com.example.crud.service;
 
 import com.example.crud.dao.RoleRepository;
 import com.example.crud.model.Role;
+import com.example.crud.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleNotFoundException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class RoleServiceImpl {
@@ -23,5 +26,9 @@ public class RoleServiceImpl {
 
     public void save(Role role) {
         roleDao.save(role);
+    }
+
+    public Set<Role> findAll() {
+        return new HashSet<>(roleDao.findAll());
     }
 }
