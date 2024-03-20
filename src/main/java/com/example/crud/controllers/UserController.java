@@ -5,14 +5,11 @@ import com.example.crud.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Collections;
 
 @Controller
@@ -43,11 +40,11 @@ public class UserController {
         }
 
         userService.save(user);
-        return "redirect:/adminPanel";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/admin/signup")
-    public String showSignUpForm() {
+    @GetMapping("/admin/create")
+    public String showUserCreationForm(@ModelAttribute("user") User user) {
         return "create-user";
     }
 

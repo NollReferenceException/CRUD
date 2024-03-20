@@ -24,6 +24,10 @@
     <input type="number" th:field="*{age}" id="age" placeholder="Age">
     <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
     <br>
+    <label for="password">Password</label>
+    <input type="password" th:field="*{password}" id="password" placeholder="Password">
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    <br>
     <input type="submit" value="Create User">
 </form>
 <br>
