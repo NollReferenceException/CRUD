@@ -41,6 +41,12 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     public void update(User user) {
+        if (user.getPassword().isEmpty()) {
+            user.setPassword(userDao.findById(user.getId()).get().getPassword());
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
         userDao.save(user);
     }
 
@@ -53,6 +59,7 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     public void delete(User user) {
+        user.setRoles(new HashSet<>());
         userDao.delete(user);
     }
 

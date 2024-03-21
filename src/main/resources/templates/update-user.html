@@ -25,6 +25,10 @@
     <input type="number" th:field="*{age}" id="age" placeholder="Age">
     <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
     <br>
+    <label for="password">Change password</label>
+    <input type="password" th:field="*{password}" id="password" placeholder="NewPassword">
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    <br>
     <th:block th:each="role:${user.allRoles}">
         <input type="checkbox"
                name="roles"            

@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("admin/update/{id}")
-    public String updateUser(@PathVariable("id") long id, @ModelAttribute("user") User user,
+    public String updateUser(@PathVariable("id") long id, User user,
                              BindingResult result) {
         if (result.hasErrors()) {
             user.setId(id);
