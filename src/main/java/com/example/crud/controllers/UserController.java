@@ -4,17 +4,17 @@ import com.example.crud.model.User;
 import com.example.crud.service.RoleServiceImpl;
 import com.example.crud.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.Set;
 
-@Controller
+@RestController
 @RequestMapping("")
 public class UserController {
 
@@ -33,19 +33,16 @@ public class UserController {
     }
 
     @GetMapping("/admin")
-    public String showUserList(Model model) {
-        model.addAttribute("users", userService.findAll());
-        return "adminPanel";
+    public Iterable<User> showUserList() {
+        return userService.findAll();
     }
 
     @PostMapping("/admin/create")
-    public String addUser(@ModelAttribute("user") User user, BindingResult result) {
-        if (result.hasErrors()) {
-            return "create-user";
-        }
+    public ResponseEntity<HttpStatus> addUser(@RequestBody User user, BindingResult result) {
 
         userService.save(user);
-        return "redirect:/admin";
+
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @GetMapping("/admin/create")
@@ -75,10 +72,8 @@ public class UserController {
     }
 
     @GetMapping("admin/delete/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    public void deleteUser(@PathVariable("id") long id) {
         User user = userService.findById(id);
-
         userService.delete(user);
-        return "redirect:/admin";
     }
 }
