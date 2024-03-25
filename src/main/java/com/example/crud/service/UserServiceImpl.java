@@ -47,6 +47,12 @@ public class UserServiceImpl implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
+        if (user.getRoles().isEmpty()) {
+            user.setRoles(userDao.findById(user.getId()).get().getRoles());
+        } else {
+            user.setRoles(user.getRoles());
+        }
+
         userDao.save(user);
     }
 

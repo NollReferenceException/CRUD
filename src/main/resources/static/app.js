@@ -1,14 +1,18 @@
 var form = document.getElementById("myForm"),
+    userName = document.getElementById("name"),
+    id = document.getElementById("id"),
+    lastNameElement = document.getElementById("lastName"),
+    age = document.getElementById("age"),
+    password = document.getElementById("password"),
+    email = document.getElementById("email"),
+
     newUserform = document.getElementById("nmyForm"),
-    imgInput = document.querySelector(".img"),
-    file = document.getElementById("imgInput"),
-    userName = document.getElementById("nname"),
-    lastNameElement = document.getElementById("nlastName"),
-    age = document.getElementById("nage"),
-    password = document.getElementById("npassword"),
-    city = document.getElementById("city"),
-    email = document.getElementById("nemail"),
-    phone = document.getElementById("phone"),
+    newUserName = document.getElementById("nname"),
+    newLastNameElement = document.getElementById("nlastName"),
+    newAge = document.getElementById("nage"),
+    newPassword = document.getElementById("npassword"),
+    newEmail = document.getElementById("nemail"),
+
     submitBtn = document.querySelector(".submit"),
     userInfo = document.getElementById("data"),
     modal = document.getElementById("userForm"),
@@ -16,6 +20,7 @@ var form = document.getElementById("myForm"),
     newUserBtn = document.querySelector(".newUser")
 
 let getData;
+
 async function test() {
     let response = await fetch("/admin");
 
@@ -33,10 +38,10 @@ test();
 
 let isEdit = false, editId
 
-newUserBtn.addEventListener('click', ()=> {
+newUserBtn.addEventListener('click', () => {
     submitBtn.innerText = 'Submit'
     modalTitle.innerText = "Fill the Form"
-    isEdit = false
+    // isEdit = false
     newUserform.reset()
 })
 
@@ -58,7 +63,7 @@ newUserBtn.addEventListener('click', ()=> {
 // }
 
 
-function showInfo(){
+function showInfo() {
     document.querySelectorAll('.employeeDetails').forEach(info => info.remove())
     getData.forEach((element, index) => {
         let createElement = `<tr class="employeeDetails">
@@ -70,7 +75,7 @@ function showInfo(){
             <td>${JSON.stringify(element.roles)}</td>
 
             <td>
-                <button class="btn btn-primary" onclick="editInfo(${element.id}, '${element.name}', '${element.age}', '${element.email}', '${element.lastName}', '${element.roles}', '${element.employeePost}', '${element.startDate}')" data-bs-toggle="modal" data-bs-target="#userForm"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-primary" onclick="editInfo(${element.id}, '${element.name}', '${element.age}', '${element.email}', '${element.lastName}', '${element.roles}')" data-bs-toggle="modal" data-bs-target="#userForm"><i class="bi bi-pencil-square"></i></button>
 
                 <button class="btn btn-danger" onclick="deleteInfo(${element.id})"><i class="bi bi-trash"></i></button>
                             
@@ -82,17 +87,17 @@ function showInfo(){
 }
 
 
-function readInfo(pic, name, age, city, email, phone){
+function readInfo(pic, name, age, city, email, phone) {
     document.querySelector('.showImg').src = pic,
-    document.querySelector('#showName').value = name,
-    document.querySelector("#showAge").value = age,
-    document.querySelector("#showCity").value = city,
-    document.querySelector("#showEmail").value = email,
-    document.querySelector("#showPhone").value = phone
+        document.querySelector('#showName').value = name,
+        document.querySelector("#showAge").value = age,
+        document.querySelector("#showCity").value = city,
+        document.querySelector("#showEmail").value = email,
+        document.querySelector("#showPhone").value = phone
 }
 
 
-function editInfo(index, name, Age, Email, lastName, roles){
+function editInfo(index, name, Age, Email, lastName, roles) {
     isEdit = true
     editId = index
     userName.value = name
@@ -106,13 +111,20 @@ function editInfo(index, name, Age, Email, lastName, roles){
 }
 
 
-function deleteInfo(index){
-    if(confirm("Are you sure want to delete?")){
-        getData.splice(index, 1)
-        localStorage.setItem("userProfile", JSON.stringify(getData))
-        showInfo()
+async function deleteInfo(index) {
+    if (confirm("Are you sure want to delete?")) {
+
+        // localStorage.setItem("userProfile", JSON.stringify(getData))
+        const response = await fetch("/admin/delete/" + index);
+        const movies = await response.json();
+        console.log(movies);
+        if (response.ok) {
+            getData.splice(index, 1)
+            showInfo()
+        }
     }
 }
+
 async function postJSON(data, url) {
     try {
         const response = await fetch(url, {
@@ -130,27 +142,32 @@ async function postJSON(data, url) {
     }
 }
 
+async function getJSON(url) {
+    const response = await fetch(url);
+    const movies = await response.json();
+    console.log(movies);
+}
 
-newUserform.addEventListener('submit', (e)=> {
+newUserform.addEventListener('submit', async (e) => {
     e.preventDefault()
 
     const information = {
-        name: userName.value,
-        lastName: lastNameElement.value,
-        age: age.value,
-        email: email.value,
-        password: password.value
+        name: newUserName.value,
+        lastName: newLastNameElement.value,
+        age: newAge.value,
+        email: newEmail.value,
+        password: newPassword.value
     }
 
-    if(!isEdit){
-        getData.push(information)
-    }
-    else{
-        isEdit = false
-        getData[editId] = information
-    }
+    // if(!isEdit){
+    getData.push(information)
+    // }
+    // else{
+    //     isEdit = false
+    //     getData[editId] = information
+    // }
 
-    postJSON(information,"/admin/create")
+    const response = await postJSON(information, "/admin/create")
 
     // localStorage.setItem('userProfile', JSON.stringify(getData))
 
@@ -160,7 +177,42 @@ newUserform.addEventListener('submit', (e)=> {
     showInfo()
 
     newUserform.reset()
-    console.log("ASIDUFDSANUSNH:F")
+    console.log("CREATED")
+
+    // modal.style.display = "none"
+    // document.querySelector(".modal-backdrop").remove()
+})
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const information = {
+        id: editId,
+        name: userName.value,
+        lastName: lastNameElement.value,
+        age: age.value,
+        email: email.value,
+        password: password.value
+    }
+
+    // if(!isEdit){
+    //     getData.push(information)
+    // }
+    // else{
+    isEdit = false
+    getData[editId] = information
+    // }
+
+    await postJSON(information, "/admin/update")
+
+    // localStorage.setItem('userProfile', JSON.stringify(getData))
+
+    // submitBtn.innerText = "Submit"
+    // modalTitle.innerHTML = "Fill The Form"
+
+    showInfo()
+
+    console.log("UPDATED")
 
     // modal.style.display = "none"
     // document.querySelector(".modal-backdrop").remove()
