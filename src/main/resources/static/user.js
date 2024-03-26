@@ -1,13 +1,4 @@
-var form = document.getElementById("myForm"),
-    userName = document.getElementById("name"),
-    id = document.getElementById("id"),
-    lastNameElement = document.getElementById("lastName"),
-    age = document.getElementById("age"),
-    password = document.getElementById("password"),
-    email = document.getElementById("email"),
-
-    userInfo = document.getElementById("data")
-
+const userInfo = document.getElementById("data");
 
 let getData;
 
@@ -32,7 +23,7 @@ function showInfo() {
             <td>${getData.lastName}</td>
             <td>${getData.age}</td>
             <td>${getData.email}</td>
-            <td>${JSON.stringify(getData.roles)}</td>
+            <td>${getData.roles.map(s => s.role)}</td>
         </tr>`
 
     userInfo.innerHTML += createElement

@@ -48,11 +48,11 @@ public class UserController {
     }
 
     @PostMapping("/admin/create")
-    public ResponseEntity<HttpStatus> addUser(@RequestBody User user, BindingResult result) {
+    public User addUser(@RequestBody User user, BindingResult result) {
 
         userService.save(user);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return (User) userService.loadUserByUsername(user.getName());
     }
 
 //    @GetMapping("/admin/create")
@@ -69,7 +69,7 @@ public class UserController {
 //        return "update-user";
 //    }
 
-    @PostMapping("admin/update")
+    @PostMapping("/admin/update")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody User user, BindingResult result) {
 
         userService.update(user);

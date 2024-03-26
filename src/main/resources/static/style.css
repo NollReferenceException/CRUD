@@ -76,10 +76,10 @@ form .inputField > div label{
     font-weight: 500;
 }
 
-#userForm form .inputField > div label::after{
-    content: "*";
-    color: red;
-}
+/*#userForm form .inputField > div label::after{*/
+/*    content: "*";*/
+/*    color: red;*/
+/*}*/
 
 #newUserForm form .inputField > div label::after{
     content: "*";
