@@ -22,7 +22,7 @@ var form = document.getElementById("myForm"),
 let getData;
 
 async function test() {
-    let response = await fetch("/admin");
+    let response = await fetch("/admin/data");
 
     if (response.ok) { // если HTTP-статус в диапазоне 200-299
         // получаем тело ответа (см. про этот метод ниже)
@@ -122,6 +122,7 @@ async function deleteInfo(index) {
             getData.splice(index, 1)
             showInfo()
         }
+
     }
 }
 

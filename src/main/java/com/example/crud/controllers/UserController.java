@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("")
@@ -21,13 +22,27 @@ public class UserController {
     @Autowired
     private RoleServiceImpl roleService;
 
-    @GetMapping("/user")
+    @RequestMapping("/user")
+    public ModelAndView showUserPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user.html");
+        return modelAndView;
+    }
+
+    @RequestMapping("/admin")
+    public ModelAndView showPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("index.html");
+        return modelAndView;
+    }
+
+    @GetMapping("/user/data")
     public User showUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/admin/data")
     public Iterable<User> showUserList() {
         return userService.findAll();
     }
