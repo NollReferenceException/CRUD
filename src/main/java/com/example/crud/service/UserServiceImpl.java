@@ -12,10 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -47,17 +45,23 @@ public class UserServiceImpl implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        if (user.getRoles() == null) {
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(userDao.findById(user.getId()).get().getRoles());
         } else {
-            user.setRoles(user.getRoles());
+            Set<Role> roles = user.getRoles().stream()
+                    .map(s -> roleService.findByName(s.getRole()))
+                    .collect(Collectors.toSet());
+
+            user.setRoles(roles);
         }
 
         userDao.save(user);
     }
 
     public Iterable<User> findAll() {
-        return userDao.findAll();
+        List<User> all = userDao.findAll();
+        all.forEach(el -> el.setAllRoles(roleService.findAll()));
+        return all;
     }
 
     public User findById(long id) {

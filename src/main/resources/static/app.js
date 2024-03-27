@@ -28,6 +28,10 @@ async function test() {
     if (response.ok) { // если HTTP-статус в диапазоне 200-299
         // получаем тело ответа (см. про этот метод ниже)
         getData = await response.json();
+        getData.forEach((element) => {
+            element.roles = element.roles.map(o => o.role)
+            element.allRoles = element.allRoles.map(o => o.role)
+        })
         showInfo()
     } else {
         alert("Ошибка HTTP: " + response.status);
@@ -67,25 +71,23 @@ newUserBtn.addEventListener('click', () => {
 function showInfo() {
     document.querySelectorAll('.employeeDetails').forEach(info => info.remove())
     getData.forEach((element, index) => {
-        // const stringRoles = (Array.from(element.roles)).map(s => s.role);
-        const  stringRoles = JSON.stringify(element.roles);
-
         let createElement = `<tr class="employeeDetails">
             <td>${element.id}</td>
             <td>${element.name}</td>
             <td>${element.lastName}</td>
             <td>${element.age}</td>
             <td>${element.email}</td>
-            <td>${element.roles.map(s => s.role)}</td>
+            <td>${element.roles}</td>
 
             <td>
                 <button class="btn btn-primary" onclick="editInfo(${index}, 
                 '${element.id}',
                 '${element.name}', 
                 '${element.age}', 
-                '${element.email}', 
-                '${element.lastName}', 
-                '${JSON.stringify(element.roles).replaceAll('"', '&quot;')}')" 
+                '${element.email}',
+                '${element.lastName}',
+                '${element.roles}',
+                '${element.allRoles}')" 
                 data-bs-toggle="modal" data-bs-target="#userForm"><i class="bi bi-pencil-square"></i></button>
 
                 <button class="btn btn-danger" onclick="deleteInfo(${index}, ${element.id})"><i class="bi bi-trash"></i></button>
@@ -96,7 +98,7 @@ function showInfo() {
     })
 }
 
-function editInfo(index, Id, name, Age, Email, lastName, Roles) {
+function editInfo(index, Id, name, Age, Email, lastName, Roles, AllRoles) {
     isEdit = true
     id.value = Id
     editId = index
@@ -104,7 +106,15 @@ function editInfo(index, Id, name, Age, Email, lastName, Roles) {
     age.value = Age
     email.value = Email
     lastNameElement.value = lastName
-    roles.value = JSON.parse(Roles).map(s => s.role)
+
+    var allRolesData = AllRoles.split(",")
+    var rolesData = Roles.split(",")
+    var $select = $('#roles');
+    $select.empty()
+    $(allRolesData).each(function (index, o) {
+        var $option = $("<option/>").attr("value", o).text(o).prop('selected', rolesData.includes(o));
+        $select.append($option);
+    });
 
     submitBtn.innerText = "Update"
     modalTitle.innerText = "Update The Form"
@@ -193,8 +203,19 @@ form.addEventListener('submit', async (e) => {
         lastName: lastNameElement.value,
         age: age.value,
         email: email.value,
-        password: password.value
+        password: password.value,
+        roles : Array.from(roles.selectedOptions).map(s=>s.value)
     }
+
+    // const information = {
+    //     id: id.value,
+    //     name: userName.value,
+    //     lastName: lastNameElement.value,
+    //     age: age.value,
+    //     email: email.value,
+    //     password: password.value,
+    //     roles : roles.value
+    // }
 
     // if(!isEdit){
     //     getData.push(information)
