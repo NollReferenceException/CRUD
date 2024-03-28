@@ -23,7 +23,7 @@ var form = document.getElementById("myForm"),
 let getData;
 
 async function test() {
-    let response = await fetch("/admin/data");
+    let response = await fetch("/admin/users");
 
     if (response.ok) { // если HTTP-статус в диапазоне 200-299
         // получаем тело ответа (см. про этот метод ниже)
@@ -123,10 +123,8 @@ function editInfo(index, Id, name, Age, Email, lastName, Roles, AllRoles) {
 
 async function deleteInfo(index, id) {
     if (confirm("Are you sure want to delete?")) {
-        // localStorage.setItem("userProfile", JSON.stringify(getData))
-
-        const response = await fetch("/admin/delete/" + id);
-        const movies = await response.json();
+        const response = await jsonRequest("", "/admin/users/" + id, "DELETE");
+        const movies = await response;
         console.log(movies);
         if (response.ok) {
             getData.splice(index, 1)
@@ -135,28 +133,21 @@ async function deleteInfo(index, id) {
     }
 }
 
-async function postJSON(data, url) {
+async function jsonRequest(data, url, type) {
     try {
         const response = await fetch(url, {
-            method: "POST", // or 'PUT'
+            method: type,
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
         });
 
-        const result = await response.json();
-        console.log("Success:", result);
-        return result;
+        console.log("Success:", response);
+        return response;
     } catch (error) {
         console.error("Error:", error);
     }
-}
-
-async function getJSON(url) {
-    const response = await fetch(url);
-    const movies = await response.json();
-    console.log(movies);
 }
 
 newUserform.addEventListener('submit', async (e) => {
@@ -170,17 +161,13 @@ newUserform.addEventListener('submit', async (e) => {
         password: newPassword.value
     }
 
-    // if(!isEdit){
-    // }
-    // else{
-    //     isEdit = false
-    //     getData[editId] = information
-    // }
+    const response = await jsonRequest(information, "/register", "POST")
+    const data = await response.json()
 
-    const response = await postJSON(information, "/register")
-    getData.push(response)
+    data.roles = data.roles.map(o => o.role);
+    data.allRoles = data.allRoles.map(o => o.role);
 
-    // localStorage.setItem('userProfile', JSON.stringify(getData))
+    getData.push(data)
 
     submitBtn.innerText = "Submit"
     modalTitle.innerHTML = "Fill The Form"
@@ -189,9 +176,6 @@ newUserform.addEventListener('submit', async (e) => {
 
     newUserform.reset()
     console.log("CREATED")
-
-    // modal.style.display = "none"
-    // document.querySelector(".modal-backdrop").remove()
 })
 
 form.addEventListener('submit', async (e) => {
@@ -204,46 +188,15 @@ form.addEventListener('submit', async (e) => {
         age: age.value,
         email: email.value,
         password: password.value,
-        roles : Array.from(roles.selectedOptions).map(s=>s.value)
+        roles: Array.from(roles.selectedOptions).map(s => s.value)
     }
 
-    // const information = {
-    //     id: id.value,
-    //     name: userName.value,
-    //     lastName: lastNameElement.value,
-    //     age: age.value,
-    //     email: email.value,
-    //     password: password.value,
-    //     roles : roles.value
-    // }
-
-    // if(!isEdit){
-    //     getData.push(information)
-    // }
-    // else{
     isEdit = false
-    // }
 
-    await postJSON(information, "/admin/update")
+    await jsonRequest(information, "/admin/users", "PUT")
     getData[editId] = information
-    // localStorage.setItem('userProfile', JSON.stringify(getData))
-
-    // submitBtn.innerText = "Submit"
-    // modalTitle.innerHTML = "Fill The Form"
 
     showInfo()
 
     console.log("UPDATED")
-
-    // modal.style.display = "none"
-    // document.querySelector(".modal-backdrop").remove()
 })
-
-function readInfo(pic, name, age, city, email, phone) {
-    document.querySelector('.showImg').src = pic,
-        document.querySelector('#showName').value = name,
-        document.querySelector("#showAge").value = age,
-        document.querySelector("#showCity").value = city,
-        document.querySelector("#showEmail").value = email,
-        document.querySelector("#showPhone").value = phone
-}

@@ -1,7 +1,6 @@
 package com.example.crud.controllers;
 
 import com.example.crud.model.User;
-import com.example.crud.service.RoleServiceImpl;
 import com.example.crud.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import utils.UserDataException;
-import utils.UserErrorResponse;
+import com.example.crud.util.UserDataException;
+import com.example.crud.util.UserErrorResponse;
 
 import java.util.List;
 
@@ -47,10 +46,9 @@ public class UserController {
 
     @PostMapping("/register")
     public User addUser(@RequestBody User user, BindingResult result) {
-        errorHandling(result);
-        userService.save(user);
 
-        return (User) userService.loadUserByUsername(user.getName());
+        errorHandling(result);
+        return userService.save(user);
     }
 
     @GetMapping("/user/data")
@@ -59,12 +57,12 @@ public class UserController {
         return (User) authentication.getPrincipal();
     }
 
-    @GetMapping("/admin/data")
+    @GetMapping("/admin/users")
     public Iterable<User> showUserList() {
         return userService.findAll();
     }
 
-    @PostMapping("/admin/update")
+    @PutMapping("/admin/users")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody User user, BindingResult result) {
         errorHandling(result);
         userService.update(user);
@@ -72,14 +70,13 @@ public class UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("admin/delete/{id}")
+    @DeleteMapping("admin/users/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long id) {
-        User user = userService.findById(id);
-        userService.delete(user);
+        userService.deleteById(id);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
-    
+
 
     private void errorHandling(BindingResult result) {
         if (result.hasErrors()) {

@@ -1,11 +1,7 @@
-package com.example.crud.setups;
+package com.example.crud.setup;
 
 import com.example.crud.dao.RoleRepository;
-import com.example.crud.dao.UserRepository;
 import com.example.crud.model.Role;
-import com.example.crud.model.User;
-import com.example.crud.service.RoleServiceImpl;
-import com.example.crud.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

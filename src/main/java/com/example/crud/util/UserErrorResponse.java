@@ -1,4 +1,4 @@
-package utils;
+package com.example.crud.util;
 
 public class UserErrorResponse {
     private String message;

@@ -4,12 +4,10 @@ import com.example.crud.dao.UserRepository;
 import com.example.crud.model.Role;
 import com.example.crud.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,14 +29,18 @@ public class UserServiceImpl implements UserDetailsService {
 
 
     @Transactional
-    public void save(User user) {
+    public User save(User user) {
         if (userDao.findByName(user.getName()).isPresent()) {
             throw new RuntimeException(user.getName() + " пользователь уже существует");
         }
 
         user.setRoles(Set.of(roleService.findByName("ROLE_USER")));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.save(user);
+
+        User savedUser = userDao.save(user);
+        savedUser.setAllRoles(roleService.findAll());
+
+        return savedUser;
     }
 
     @Transactional
@@ -74,6 +76,13 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Transactional
     public void delete(User user) {
+        user.setRoles(new HashSet<>());
+        userDao.delete(user);
+    }
+
+    @Transactional
+    public void deleteById(long id) {
+        User user = findById(id);
         user.setRoles(new HashSet<>());
         userDao.delete(user);
     }
