@@ -30,13 +30,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().
                 authorizeRequests()
-                .antMatchers("/login", "/registration").permitAll()
+                .antMatchers("/login", "/register", "/css/**", "/scripts/**").permitAll()
                 .antMatchers("/user").access("hasAnyRole('ROLE_USER')")
-//                .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')")
-                .anyRequest().permitAll();
-//                .and()
-//                .formLogin();
-//                .successHandler(successUserHandler);
+                .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .successHandler(successUserHandler);
     }
 
     @Override

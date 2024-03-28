@@ -177,7 +177,7 @@ newUserform.addEventListener('submit', async (e) => {
     //     getData[editId] = information
     // }
 
-    const response = await postJSON(information, "/admin/create")
+    const response = await postJSON(information, "/register")
     getData.push(response)
 
     // localStorage.setItem('userProfile', JSON.stringify(getData))

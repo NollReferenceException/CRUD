@@ -36,6 +36,13 @@ public class UserController {
         return modelAndView;
     }
 
+    @RequestMapping("/register")
+    public ModelAndView showRegisterPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("register.html");
+        return modelAndView;
+    }
+
     @GetMapping("/user/data")
     public User showUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -47,8 +54,10 @@ public class UserController {
         return userService.findAll();
     }
 
-    @PostMapping("/admin/create")
+    @PostMapping("/register")
     public User addUser(@RequestBody User user, BindingResult result) {
+
+
 
         userService.save(user);
 
