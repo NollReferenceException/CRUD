@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,8 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+    @Transactional
     public void save(User user) {
         if (userDao.findByName(user.getName()).isPresent()) {
             throw new RuntimeException(user.getName() + " пользователь уже существует");
@@ -38,6 +41,7 @@ public class UserServiceImpl implements UserDetailsService {
         userDao.save(user);
     }
 
+    @Transactional
     public void update(User user) {
         if (user.getPassword().isEmpty()) {
             user.setPassword(userDao.findById(user.getId()).get().getPassword());
@@ -68,6 +72,7 @@ public class UserServiceImpl implements UserDetailsService {
         return userDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
     }
 
+    @Transactional
     public void delete(User user) {
         user.setRoles(new HashSet<>());
         userDao.delete(user);

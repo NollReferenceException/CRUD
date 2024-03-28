@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleNotFoundException;
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ public class RoleServiceImpl {
         }
     }
 
+    @Transactional
     public void save(Role role) {
         roleDao.save(role);
     }

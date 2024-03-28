@@ -9,8 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import utils.UserDataException;
+import utils.UserErrorResponse;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("")
@@ -18,9 +23,6 @@ public class UserController {
 
     @Autowired
     private UserServiceImpl userService;
-
-    @Autowired
-    private RoleServiceImpl roleService;
 
     @RequestMapping("/user")
     public ModelAndView showUserPage() {
@@ -43,6 +45,14 @@ public class UserController {
         return modelAndView;
     }
 
+    @PostMapping("/register")
+    public User addUser(@RequestBody User user, BindingResult result) {
+        errorHandling(result);
+        userService.save(user);
+
+        return (User) userService.loadUserByUsername(user.getName());
+    }
+
     @GetMapping("/user/data")
     public User showUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,34 +64,11 @@ public class UserController {
         return userService.findAll();
     }
 
-    @PostMapping("/register")
-    public User addUser(@RequestBody User user, BindingResult result) {
-
-
-
-        userService.save(user);
-
-        return (User) userService.loadUserByUsername(user.getName());
-    }
-
-//    @GetMapping("/admin/create")
-//    public String showUserCreationForm(@ModelAttribute("user") User user) {
-//        return "create-user";
-//    }
-
-//    @GetMapping("/admin/edit/{id}")
-//    public String showUpdateForm(@PathVariable("id") long id, Model model) {
-//        User user = userService.findById(id);
-//        user.setAllRoles(roleService.findAll());
-//
-//        model.addAttribute("user", user);
-//        return "update-user";
-//    }
-
     @PostMapping("/admin/update")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody User user, BindingResult result) {
-
+        errorHandling(result);
         userService.update(user);
+
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -91,5 +78,29 @@ public class UserController {
         userService.delete(user);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+    
+
+    private void errorHandling(BindingResult result) {
+        if (result.hasErrors()) {
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> errors = result.getFieldErrors();
+
+            for (FieldError error : errors) {
+                errorMsg.append(error.getField())
+                        .append(" - ")
+                        .append(error.getDefaultMessage())
+                        .append(";");
+            }
+
+            throw new UserDataException(errorMsg.toString());
+        }
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<UserErrorResponse> handleException(UserDataException e) {
+        UserErrorResponse response = new UserErrorResponse(e.getMessage(), System.currentTimeMillis());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
