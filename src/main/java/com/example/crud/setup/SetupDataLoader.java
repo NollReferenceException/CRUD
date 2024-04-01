@@ -27,17 +27,17 @@ public class SetupDataLoader implements
         if (alreadySetup)
             return;
 
-        createRoleIfNotFound("ROLE_ADMIN");
-        createRoleIfNotFound("ROLE_USER");
+        createRoleIfNotFound("ROLE_ADMIN", 1);
+        createRoleIfNotFound("ROLE_USER", 2);
 
         alreadySetup = true;
     }
 
     @Transactional
-    public Role createRoleIfNotFound(String name) {
+    public Role createRoleIfNotFound(String name, long id) {
 
         Optional<Role> optionalRole = roleRepository.findByRole(name);
 
-        return optionalRole.orElseGet(() -> roleRepository.save(new Role(name)));
+        return optionalRole.orElseGet(() -> roleRepository.save(new Role(name, id)));
     }
 }

@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  backend:
+    image: codeerror404/java-crud
+    ports:
+      - "8181:8181"
+    depends_on:
+        - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5438/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=chepuh1337
+      - SERVER_PORT=8181
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: chepuh1337
+    ports:
+      - "5438:5438"
+    command: -p 5438
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  db-data:
+
