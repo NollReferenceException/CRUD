@@ -3,7 +3,7 @@
 #COPY ${JAR_FILE} CRUD-0.0.1-SNAPSHOT.jar
 #CMD ["java", "-jar", "CRUD-0.0.1-SNAPSHOT.jar"]
 
-FROM maven:3.8.7-jdk-18-slim AS build
+FROM maven:3.8.7-openjdk-18-slim AS build
 RUN mkdir -p /workspace
 WORKDIR /workspace
 COPY pom.xml /workspace
