@@ -8,15 +8,15 @@ services:
         - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5438/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=chepuh1337
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASS}
       - SERVER_PORT=8181
 
   db:
     image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: chepuh1337
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     ports:
       - "5438:5438"
     command: -p 5438
