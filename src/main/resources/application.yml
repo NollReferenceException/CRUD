@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${POSTGRES.USERNAME}
+    password: ${POSTGRES.PASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  application:
+    name: CRUD
+  liquibase:
+    enabled: true
+
+
