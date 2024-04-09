@@ -1,0 +1,28 @@
+name: Only Deploy
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    needs: [ build_and_push_images, push_compose ]
+    steps:
+      - name: Connect with SSH and Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            
+            echo DB_USER = ${{ secrets.DB_USER }} >> java-crud-env.txt
+            echo DB_PASS = ${{ secrets.DB_PASS }} >> java-crud-env.txt
+            echo ELK_URL = ${{ secrets.ELK_URL }} >> java-crud-env.txt
+            
+            sudo -S docker stop java-crud
+            sudo -S docker rm java-crud
+            sudo -S docker rmi codeerror404/java-crud
+            sudo -S docker-compose pull
+            sudo -S docker-compose -f docker-compose.yml --env-file=java-crud-env.txt up -d
+            sudo -S docker ps -a  
+            
+            rm java-crud-env.txt
