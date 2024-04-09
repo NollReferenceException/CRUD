@@ -61,6 +61,7 @@ jobs:
             sudo -S docker stop java-crud
             sudo -S docker rm java-crud
             sudo -S docker rmi codeerror404/java-crud
+            sudo -S docker-compose pull
             sudo -S docker-compose -f docker-compose.yml --env-file=java-crud-env.txt up -d
             sudo -S docker ps -a  
             
