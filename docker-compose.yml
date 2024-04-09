@@ -2,6 +2,7 @@ version: '3.8'
 services:
   backend:
     image: codeerror404/java-crud
+    pull_policy: always
     ports:
       - "8181:8181"
     depends_on:
