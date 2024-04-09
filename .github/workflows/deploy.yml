@@ -56,6 +56,7 @@ jobs:
             
             echo DB_USER = ${{ secrets.DB_USER }} >> java-crud-env.txt
             echo DB_PASS = ${{ secrets.DB_PASS }} >> java-crud-env.txt
+            echo ELK_URL = ${{ secrets.ELK_URL }} >> java-crud-env.txt
             
             sudo -S docker stop java-crud
             sudo -S docker rm java-crud
