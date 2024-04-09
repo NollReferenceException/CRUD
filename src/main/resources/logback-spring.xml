@@ -3,7 +3,17 @@
 <include resource="org/springframework/boot/logging/logback/base.xml"/>
 <springProfile name="!dev">
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>${LOGBACK_DESTINATION_URL}</destination>
+        <destination>194.87.237.197:50000</destination>
+        <destination>194.87.237.197:4560</destination>
+        <destination>192.168.208.1:50000</destination>
+        <destination>192.168.208.1:4560</destination>
+        <destination>0.0.0.0:50000</destination>
+        <destination>0.0.0.0:4560</destination>
+        <connectionStrategy>
+            <preferPrimary>
+                <secondaryConnectionTTL>5 minutes</secondaryConnectionTTL>
+            </preferPrimary>
+        </connectionStrategy>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <mdc/>
