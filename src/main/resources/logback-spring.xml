@@ -2,7 +2,7 @@
 <configuration>
 <include resource="org/springframework/boot/logging/logback/base.xml"/>
 <springProfile name="!dev">
-    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashUdpSocketAppender">
         <destination>${LOGBACK_DESTINATION_URL}</destination>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
